@@ -5,7 +5,6 @@ import {
   Group,
   ActionIcon,
   Button,
-  NumberInput,
 } from '@mantine/core';
 import { IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react';
 import { Product } from '../../types';
@@ -19,10 +18,9 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
-  const handleQuantityChange = (value: string | number) => {
-    const newQuantity = typeof value === 'string' ? parseInt(value) : value;
-    if (newQuantity >= 1) {
-      setQuantity(newQuantity);
+  const handleQuantityChange = (value: number) => {
+    if (value >= 1 && value <= product.stock) {
+      setQuantity(value);
     }
   };
 
@@ -39,6 +37,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       withBorder
       className={styles.productCard}
     >
+      {/* Картинка */}
       <Card.Section>
         <div className={styles.imageContainer}>
           <img
@@ -49,20 +48,17 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         </div>
       </Card.Section>
 
+      {/* Название, вес и счетчик в одной строке */}
       <Group justify="space-between" mt="md" mb="xs">
-        <Text fw={600} size="lg">
-          {product.title}
-        </Text>
-        <Text size="sm" c="dimmed">
-          1 kg
-        </Text>
-      </Group>
+        <Group gap="xs">
+          <Text fw={600} size="lg">
+            {product.title}
+          </Text>
+          <Text size="sm" c="dimmed">
+            {product.weight ?? '1 kg'}
+          </Text>
+        </Group>
 
-      <Text fw={700} size="xl" c="#212529" mb="md">
-        $ {product.price}
-      </Text>
-
-      <Group justify="space-between" mb="md">
         <Group gap="xs">
           <ActionIcon
             variant="light"
@@ -74,21 +70,9 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             <IconMinus size={14} />
           </ActionIcon>
 
-          <NumberInput
-            value={quantity}
-            onChange={handleQuantityChange}
-            min={1}
-            max={product.stock}
-            size="sm"
-            w={60}
-            hideControls
-            styles={{
-              input: {
-                textAlign: 'center',
-                padding: '4px 8px',
-              },
-            }}
-          />
+          <Text fw={500} size="sm" style={{ minWidth: 20, textAlign: 'center' }}>
+            {quantity}
+          </Text>
 
           <ActionIcon
             variant="light"
@@ -102,16 +86,30 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         </Group>
       </Group>
 
-      <Button
-        fullWidth
-        rightSection={<IconShoppingCart size={16} color="#3B944E" />}
-        onClick={handleAddToCart}
-        color="#E7FAEB"
-        variant="filled"
-        className={styles.addToCartBtn}
-      >
-        Add to cart
-      </Button>
+      {/* Цена + кнопка */}
+      <Group justify="space-between">
+        <Text fw={700} size="xl" c="#212529">
+          $ {product.price}
+        </Text>
+
+        <Button
+          leftSection={<IconShoppingCart size={16} color="#3B944E" />}
+          onClick={handleAddToCart}
+          variant="filled"
+          styles={{
+            root: {
+              backgroundColor: '#E7FAEB',
+              color: '#3B944E',
+              fontWeight: 600,
+              '&:hover': {
+                backgroundColor: '#D6F2DA',
+              },
+            },
+          }}
+        >
+          Add to cart
+        </Button>
+      </Group>
     </Card>
   );
 };
