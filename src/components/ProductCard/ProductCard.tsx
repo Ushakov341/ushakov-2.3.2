@@ -18,15 +18,17 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
-  const handleQuantityChange = (value: number) => {
-    if (value >= 1 && value <= product.stock) {
-      setQuantity(value);
-    }
+  const increment = () => {
+    setQuantity(prev => Math.min(prev + 1, product.stock ?? 99));
+  };
+
+  const decrement = () => {
+    setQuantity(prev => Math.max(prev - 1, 1));
   };
 
   const handleAddToCart = () => {
     onAddToCart(product, quantity);
-    setQuantity(1);
+    setQuantity(1); // сброс после добавления в корзину
   };
 
   return (
@@ -64,7 +66,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             variant="light"
             color="gray"
             size="sm"
-            onClick={() => handleQuantityChange(quantity - 1)}
+            onClick={decrement}
             disabled={quantity <= 1}
           >
             <IconMinus size={14} />
@@ -78,8 +80,8 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             variant="light"
             color="gray"
             size="sm"
-            onClick={() => handleQuantityChange(quantity + 1)}
-            disabled={quantity >= product.stock}
+            onClick={increment}
+            disabled={quantity >= (product.stock ?? 99)}
           >
             <IconPlus size={14} />
           </ActionIcon>
