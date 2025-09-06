@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Card,
-  Text,
-  Group,
-  ActionIcon,
-  Button,
-} from '@mantine/core';
+import { Card, Text, Group, ActionIcon, Button } from '@mantine/core';
 import { IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react';
 import { Product } from '../../types';
 import styles from './ProductCard.module.css';
@@ -20,7 +14,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   const handleQuantityChange = (newQuantity: number) => {
     const maxStock = product.stock && product.stock > 0 ? product.stock : Infinity;
-  
     if (newQuantity >= 1 && newQuantity <= maxStock) {
       setQuantity(newQuantity);
     }
@@ -33,27 +26,31 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   const weightMatch = product.title.match(/(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i);
   const extractedWeight = weightMatch ? weightMatch[0] : product.weight ? `${product.weight} kg` : '';
-
   const cleanTitle = product.title.replace(/-?\s*(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i, '').trim();
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder className={styles.productCard}>
       <Card.Section>
         <div className={styles.imageContainer}>
-          <img
-            src={product.thumbnail}
-            alt={cleanTitle}
-            className={styles.productImage}
-          />
+          {product.thumbnail ? (
+            <img
+              src={product.thumbnail}
+              alt={cleanTitle}
+              className={styles.productImage}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.png'; // резервная картинка
+              }}
+            />
+          ) : (
+            <div className={styles.placeholder}>No image</div>
+          )}
         </div>
       </Card.Section>
 
       <Group justify="space-between" mt="md" mb="sm" align="center">
         <Group gap="xs" align="center">
           <Text fw={600} size="lg">{cleanTitle}</Text>
-          {extractedWeight && (
-            <Text size="sm" c="dimmed">{extractedWeight}</Text>
-          )}
+          {extractedWeight && <Text size="sm" c="dimmed">{extractedWeight}</Text>}
         </Group>
 
         <Group gap="xs" align="center">
@@ -94,9 +91,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           color="#E7FAEB"
           variant="filled"
           className={styles.addToCartBtn}
-          styles={{
-            label: { color: '#3B944E', fontWeight: 600 },
-          }}
+          styles={{ label: { color: '#3B944E', fontWeight: 600 } }}
         >
           Add to cart
         </Button>
