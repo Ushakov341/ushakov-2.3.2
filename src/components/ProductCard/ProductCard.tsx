@@ -18,55 +18,51 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
-  const increment = () => {
-    setQuantity(prev => Math.min(prev + 1, product.stock ?? 99));
-  };
-
-  const decrement = () => {
-    setQuantity(prev => Math.max(prev - 1, 1));
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity >= 1 && newQuantity <= product.stock) {
+      setQuantity(newQuantity);
+    }
   };
 
   const handleAddToCart = () => {
     onAddToCart(product, quantity);
-    setQuantity(1); // сброс после добавления в корзину
+    setQuantity(1);
   };
 
+  // Ищем вес в title (например "1/4 Kg", "1 Kg", "500 g", "2 L")
+  const weightMatch = product.title.match(/(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i);
+  const extractedWeight = weightMatch ? weightMatch[0] : product.weight ? `${product.weight} kg` : '';
+
+  // Чистим название от веса
+  const cleanTitle = product.title.replace(/-?\s*(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i, '').trim();
+
   return (
-    <Card
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-      className={styles.productCard}
-    >
-      {/* Картинка */}
+    <Card shadow="sm" padding="lg" radius="md" withBorder className={styles.productCard}>
       <Card.Section>
         <div className={styles.imageContainer}>
           <img
             src={product.thumbnail}
-            alt={product.title}
+            alt={cleanTitle}
             className={styles.productImage}
           />
         </div>
       </Card.Section>
 
-      {/* Название, вес и счетчик в одной строке */}
-      <Group justify="space-between" mt="md" mb="xs">
-        <Group gap="xs">
-          <Text fw={600} size="lg">
-            {product.title}
-          </Text>
-          <Text size="sm" c="dimmed">
-            {product.weight ?? '1 kg'}
-          </Text>
+      {/* Название + вес + количество */}
+      <Group justify="space-between" mt="md" mb="sm" align="center">
+        <Group gap="xs" align="center">
+          <Text fw={600} size="lg">{cleanTitle}</Text>
+          {extractedWeight && (
+            <Text size="sm" c="dimmed">{extractedWeight}</Text>
+          )}
         </Group>
 
-        <Group gap="xs">
+        <Group gap="xs" align="center">
           <ActionIcon
             variant="light"
             color="gray"
             size="sm"
-            onClick={decrement}
+            onClick={() => handleQuantityChange(quantity - 1)}
             disabled={quantity <= 1}
           >
             <IconMinus size={14} />
@@ -80,8 +76,8 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             variant="light"
             color="gray"
             size="sm"
-            onClick={increment}
-            disabled={quantity >= (product.stock ?? 99)}
+            onClick={() => handleQuantityChange(quantity + 1)}
+            disabled={quantity >= product.stock}
           >
             <IconPlus size={14} />
           </ActionIcon>
@@ -89,7 +85,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       </Group>
 
       {/* Цена + кнопка */}
-      <Group justify="space-between">
+      <Group justify="space-between" mt="md" align="center">
         <Text fw={700} size="xl" c="#212529">
           $ {product.price}
         </Text>
@@ -97,16 +93,11 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <Button
           leftSection={<IconShoppingCart size={16} color="#3B944E" />}
           onClick={handleAddToCart}
+          color="#E7FAEB"
           variant="filled"
+          className={styles.addToCartBtn}
           styles={{
-            root: {
-              backgroundColor: '#E7FAEB',
-              color: '#3B944E',
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: '#D6F2DA',
-              },
-            },
+            label: { color: '#3B944E', fontWeight: 600 },
           }}
         >
           Add to cart
