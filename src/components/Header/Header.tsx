@@ -93,7 +93,7 @@ export const Header = ({ cart, onUpdateQuantity, onRemoveFromCart, onClearCart }
                               {item.product.title}
                             </Text>
                             <Text size="xs" c="dimmed">1 kg</Text>
-                            <Text fw={600} c="#54b46a">₹ {item.product.price}</Text>
+                            <Text fw={600} c="#54b46a">$ {item.product.price}</Text>
                           </div>
                         </Group>
                         
@@ -133,7 +133,7 @@ export const Header = ({ cart, onUpdateQuantity, onRemoveFromCart, onClearCart }
                   
                   <Group justify="space-between" pt="md" style={{ borderTop: '1px solid #e9ecef' }}>
                     <Text fw={600}>Total</Text>
-                    <Text fw={700} c="#54b46a">₹ {cart.totalPrice.toFixed(2)}</Text>
+                    <Text fw={700} c="#54b46a">$ {cart.totalPrice.toFixed(2)}</Text>
                   </Group>
                   
                   <Button

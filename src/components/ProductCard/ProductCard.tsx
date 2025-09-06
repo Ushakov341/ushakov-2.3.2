@@ -19,7 +19,10 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= product.stock) {
+    // Если stock не задан — считаем что товара бесконечно
+    const maxStock = product.stock && product.stock > 0 ? product.stock : Infinity;
+  
+    if (newQuantity >= 1 && newQuantity <= maxStock) {
       setQuantity(newQuantity);
     }
   };
