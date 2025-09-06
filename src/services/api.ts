@@ -13,9 +13,9 @@ export const fetchProducts = async (): Promise<Product[]> => {
 
     return data.map((item: any) => ({
       ...item,
-      title: item.name, // у тебя title, а в API name
-      images: [item.image], // API → image, у тебя → images[]
-      thumbnail: item.image, // можно дублировать
+      title: item.name, 
+      images: [item.image], 
+      thumbnail: item.image, 
     }));
   } catch (error) {
     console.error('Error fetching products:', error);

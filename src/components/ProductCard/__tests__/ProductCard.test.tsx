@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 import { ProductCard } from '../ProductCard';
 import { Product } from '../../../types';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 const mockProduct: Product = {
   id: 1,

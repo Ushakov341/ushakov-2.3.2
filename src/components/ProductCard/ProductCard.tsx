@@ -19,7 +19,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (newQuantity: number) => {
-    // Если stock не задан — считаем что товара бесконечно
     const maxStock = product.stock && product.stock > 0 ? product.stock : Infinity;
   
     if (newQuantity >= 1 && newQuantity <= maxStock) {
@@ -32,11 +31,9 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     setQuantity(1);
   };
 
-  // Ищем вес в title (например "1/4 Kg", "1 Kg", "500 g", "2 L")
   const weightMatch = product.title.match(/(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i);
   const extractedWeight = weightMatch ? weightMatch[0] : product.weight ? `${product.weight} kg` : '';
 
-  // Чистим название от веса
   const cleanTitle = product.title.replace(/-?\s*(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i, '').trim();
 
   return (
@@ -51,7 +48,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         </div>
       </Card.Section>
 
-      {/* Название + вес + количество */}
       <Group justify="space-between" mt="md" mb="sm" align="center">
         <Group gap="xs" align="center">
           <Text fw={600} size="lg">{cleanTitle}</Text>
@@ -87,7 +83,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         </Group>
       </Group>
 
-      {/* Цена + кнопка */}
       <Group justify="space-between" mt="md" align="center">
         <Text fw={700} size="xl" c="#212529">
           $ {product.price}
