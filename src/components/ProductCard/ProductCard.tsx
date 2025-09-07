@@ -13,7 +13,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (newQuantity: number) => {
-    const maxStock = product.stock && product.stock > 0 ? product.stock : Infinity;
+    const maxStock = product.stock && product.stock > 0 ? product.stock : 999;
     if (newQuantity >= 1 && newQuantity <= maxStock) {
       setQuantity(newQuantity);
     }
@@ -38,16 +38,18 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   // --- Работа с картинками ---
   const resolveImageSrc = () => {
-    if (product.thumbnail) {
-      // если thumbnail полный url
-      if (product.thumbnail.startsWith('http')) {
-        return product.thumbnail;
-      }
-      // если thumbnail = "Brocolli" → берём из public/images/
-      return `/images/${product.thumbnail}.jpg`;
+    // Сначала пробуем thumbnail
+    if (product.thumbnail && product.thumbnail.startsWith('http')) {
+      return product.thumbnail;
     }
-    // если ничего нет → заглушка
-    return '/placeholder.png';
+    
+    // Потом первое изображение из массива
+    if (product.images && product.images.length > 0) {
+      return product.images[0];
+    }
+    
+    // Fallback изображение для продуктов
+    return 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=400';
   };
 
   return (
@@ -59,7 +61,11 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             alt={cleanTitle}
             className={styles.productImage}
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/placeholder.png';
+              const target = e.target as HTMLImageElement;
+              // Если основное изображение не загрузилось, пробуем fallback
+              if (!target.src.includes('pexels.com')) {
+                target.src = 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=400';
+              }
             }}
           />
         </div>
@@ -78,6 +84,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             size="sm"
             onClick={() => handleQuantityChange(quantity - 1)}
             disabled={quantity <= 1}
+            data-testid="decrease-quantity-button"
           >
             <IconMinus size={14} />
           </ActionIcon>
@@ -91,7 +98,8 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             color="gray"
             size="sm"
             onClick={() => handleQuantityChange(quantity + 1)}
-            disabled={quantity >= product.stock}
+            disabled={product.stock > 0 && quantity >= product.stock}
+            data-testid="increase-quantity-button"
           >
             <IconPlus size={14} />
           </ActionIcon>

@@ -1,7 +1,6 @@
 import { Product } from '../types';
 
-const API_URL =
-  'https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json';
+const API_URL = 'https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json';
 
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
@@ -11,18 +10,40 @@ export const fetchProducts = async (): Promise<Product[]> => {
     }
 
     const data = await response.json();
-    console.log('Fetched data:', data); // проверяем, что приходит
+    console.log('Fetched data:', data);
 
-    return data.map((item: any) => {
-      const imageUrl = item.image?.url || item.image || ''; // безопасно берём URL
-
-      return {
-        ...item,
-        title: item.name || item.title || 'No title',
-        images: imageUrl ? [imageUrl] : [],
-        thumbnail: imageUrl,
-      };
-    });
+    // API возвращает массив продуктов напрямую
+    const products = Array.isArray(data) ? data : [];
+    
+    return products
+      .map((item: any) => ({
+        id: item.id,
+        sku: item.sku || `sku-${item.id}`,
+        title: item.title || item.name,
+        description: item.description,
+        availabilityStatus: item.availabilityStatus || 'In Stock',
+        category: item.category || 'vegetables',
+        price: item.price || 0,
+        discountPercentage: item.discountPercentage || 0,
+        rating: item.rating || 0,
+        stock: item.stock || 0,
+        tags: item.tags || [],
+        brand: item.brand || '',
+        weight: item.weight || 1,
+        dimensions: item.dimensions || { width: 10, height: 10, depth: 10 },
+        warrantyInformation: item.warrantyInformation || '',
+        shippingInformation: item.shippingInformation || '',
+        returnPolicy: item.returnPolicy || '',
+        minimumOrderQuantity: item.minimumOrderQuantity || 1,
+        meta: item.meta || {
+          createdAt: '',
+          updatedAt: '',
+          barcode: '',
+          qrCode: ''
+        },
+        images: item.images || [],
+        thumbnail: item.image || item.thumbnail || ''
+      }));
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;
