@@ -12,7 +12,6 @@ export const fetchProducts = async (): Promise<Product[]> => {
     const data = await response.json();
     console.log('Fetched data:', data);
 
-    // API возвращает массив продуктов напрямую
     const products = Array.isArray(data) ? data : [];
     
     return products
