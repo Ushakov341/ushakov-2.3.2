@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core';
 import { Header } from '../Header';
 import { CartState } from '../../../types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import React from 'react';
 
 const mockCart: CartState = {
   items: [],
