@@ -42,7 +42,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
           qrCode: ''
         },
         images: item.images || [],
-        thumbnail: item.image ? `https://res.cloudinary.com/sivadass/image/fetch/w_300,h_300,c_fill,f_auto,q_auto/${encodeURIComponent(item.image)}` : 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=400'
+        thumbnail: item.image || item.thumbnail || ''
       }));
   } catch (error) {
     console.error('Error fetching products:', error);
