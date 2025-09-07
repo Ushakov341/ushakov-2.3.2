@@ -24,26 +24,44 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     setQuantity(1);
   };
 
+  // --- Работа с названием и весом ---
   const weightMatch = product.title.match(/(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i);
-  const extractedWeight = weightMatch ? weightMatch[0] : product.weight ? `${product.weight} kg` : '';
-  const cleanTitle = product.title.replace(/-?\s*(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i, '').trim();
+  const extractedWeight = weightMatch
+    ? weightMatch[0]
+    : product.weight
+    ? `${product.weight} kg`
+    : '';
+  const cleanTitle = product.title.replace(
+    /-?\s*(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i,
+    ''
+  ).trim();
+
+  // --- Работа с картинками ---
+  const resolveImageSrc = () => {
+    if (product.thumbnail) {
+      // если thumbnail полный url
+      if (product.thumbnail.startsWith('http')) {
+        return product.thumbnail;
+      }
+      // если thumbnail = "Brocolli" → берём из public/images/
+      return `/images/${product.thumbnail}.jpg`;
+    }
+    // если ничего нет → заглушка
+    return '/placeholder.png';
+  };
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder className={styles.productCard}>
       <Card.Section>
         <div className={styles.imageContainer}>
-          {product.thumbnail ? (
-            <img
-              src={product.thumbnail}
-              alt={cleanTitle}
-              className={styles.productImage}
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder.png'; // резервная картинка
-              }}
-            />
-          ) : (
-            <div className={styles.placeholder}>No image</div>
-          )}
+          <img
+            src={resolveImageSrc()}
+            alt={cleanTitle}
+            className={styles.productImage}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/placeholder.png';
+            }}
+          />
         </div>
       </Card.Section>
 
