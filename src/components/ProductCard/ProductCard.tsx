@@ -39,13 +39,8 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   // --- Работа с картинками ---
   const resolveImageSrc = () => {
     // Сначала пробуем thumbnail
-    if (product.thumbnail && product.thumbnail.startsWith('http')) {
+    if (product.thumbnail) {
       return product.thumbnail;
-    }
-    
-    // Потом первое изображение из массива
-    if (product.images && product.images.length > 0) {
-      return product.images[0];
     }
     
     // Fallback изображение для продуктов
