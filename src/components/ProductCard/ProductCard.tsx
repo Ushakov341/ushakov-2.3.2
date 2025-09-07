@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, Text, Group, ActionIcon, Button } from '@mantine/core';
 import { IconMinus, IconPlus, IconShoppingCart } from '@tabler/icons-react';
 import { Product } from '../../types';
