@@ -11,7 +11,7 @@
 
 .addToCartBtn {
   background-color: #e7faeb;
-  color: #3b944e; /* текст */
+  color: #3b944e;
 }
 
 .imageContainer {
@@ -39,6 +39,6 @@
 }
 
 .addToCartBtn:hover {
-  background-color: #4a9960 !important;
+  background-color: #D6F0DC !important;
   transform: translateY(-1px);
 }

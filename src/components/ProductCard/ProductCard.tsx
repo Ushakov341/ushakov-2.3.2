@@ -24,7 +24,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     setQuantity(1);
   };
 
-  // --- Работа с названием и весом ---
   const weightMatch = product.title.match(/(\d+\/\d+|\d+(\.\d+)?)\s*(kg|g|l|ml)/i);
   const extractedWeight = weightMatch
     ? weightMatch[0]
@@ -36,14 +35,11 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     ''
   ).trim();
 
-  // --- Работа с картинками ---
   const resolveImageSrc = () => {
-    // Сначала пробуем thumbnail
     if (product.thumbnail) {
       return product.thumbnail;
     }
     
-    // Fallback изображение для продуктов
     return 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=400';
   };
 
@@ -57,7 +53,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             className={styles.productImage}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              // Если основное изображение не загрузилось, пробуем fallback
               if (!target.src.includes('pexels.com')) {
                 target.src = 'https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=400';
               }
